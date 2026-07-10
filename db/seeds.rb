@@ -29,7 +29,7 @@ breed_data["message"].each do |breed_name, sub_breed_names|
   breed = Breed.create!(
     name: breed_name.titleize,
     description: Faker::Lorem.sentence(word_count: 10),
-    featured: [true, false].sample
+    featured: [ true, false ].sample
   )
 
   sub_breed_names.each do |sub_breed_name|
