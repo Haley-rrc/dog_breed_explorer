@@ -1,21 +1,27 @@
 class BreedsController < ApplicationController
   def index
+    @sub_breeds = SubBreed.includes(:breed).order(:name)
     @breeds = Breed.order(:name)
 
     if params[:query].present?
+      search_term = ActiveRecord::Base.sanitize_sql_like(
+        params[:query].strip.downcase
+      )
+
       @breeds = @breeds.where(
-        "LOWER(name) LIKE ?",
-        "%#{params[:query].downcase}%"
+        "LOWER(breeds.name) LIKE ?",
+        "%#{search_term}%"
       )
     end
 
-    case params[:category]
-    when "with_sub_breeds"
-      @breeds = @breeds.joins(:sub_breeds).distinct
-    when "without_sub_breeds"
-      @breeds = @breeds.left_joins(:sub_breeds)
-                         .where(sub_breeds: { id: nil })
-    when "featured"
+    if params[:sub_breed_id].present?
+      @breeds = @breeds
+        .joins(:sub_breeds)
+        .where(sub_breeds: { id: params[:sub_breed_id] })
+        .distinct
+    end
+
+    if params[:featured] == "1"
       @breeds = @breeds.where(featured: true)
     end
 
@@ -23,6 +29,6 @@ class BreedsController < ApplicationController
   end
 
   def show
-    @breed = Breed.find(params[:id])
+    @breed = Breed.includes(:sub_breeds, :dog_images).find(params[:id])
   end
 end

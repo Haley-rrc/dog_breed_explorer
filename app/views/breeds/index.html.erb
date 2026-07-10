@@ -2,7 +2,7 @@
   <h1 class="display-5 fw-bold">Dog Breeds</h1>
 
   <p class="lead">
-    Browse all dog breeds collected from the Dog CEO API.
+    Browse and search dog breeds collected from the Dog CEO API.
   </p>
 </div>
 
@@ -12,7 +12,7 @@
               class: "search-form mb-4" do |form| %>
 
   <div class="row g-3 align-items-end">
-    <div class="col-12 col-md-5">
+    <div class="col-12 col-lg-4">
       <%= form.label :query,
                      "Search by breed name",
                      class: "form-label fw-bold" %>
@@ -23,33 +23,53 @@
                           class: "form-control" %>
     </div>
 
-    <div class="col-12 col-md-4">
-      <%= form.label :category,
-                     "Filter breeds",
+    <div class="col-12 col-lg-4">
+      <%= form.label :sub_breed_id,
+                     "Filter by sub-breed",
                      class: "form-label fw-bold" %>
 
-      <%= form.select :category,
+      <%= form.select :sub_breed_id,
           options_for_select(
-            [
-              ["All breeds", ""],
-              ["Breeds with sub-breeds", "with_sub_breeds"],
-              ["Breeds without sub-breeds", "without_sub_breeds"],
-              ["Featured breeds", "featured"]
-            ],
-            params[:category]
+            [["All sub-breeds", ""]] +
+            @sub_breeds.map do |sub_breed|
+              [
+                "#{sub_breed.name} (#{sub_breed.breed.name})",
+                sub_breed.id
+              ]
+            end,
+            params[:sub_breed_id]
           ),
           {},
           class: "form-select" %>
     </div>
 
-    <div class="col-12 col-md-3">
+    <div class="col-12 col-lg-2">
+      <div class="form-check">
+        <%= form.check_box :featured,
+                           {
+                             checked: params[:featured] == "1",
+                             class: "form-check-input"
+                           },
+                           "1",
+                           "0" %>
+
+        <%= form.label :featured,
+                       "Featured only",
+                       class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-2">
       <%= form.submit "Search",
                       class: "btn btn-primary me-2" %>
 
-      <% if params[:query].present? || params[:category].present? %>
+      <% if params[:query].present? ||
+            params[:sub_breed_id].present? ||
+            params[:featured] == "1" %>
+
         <%= link_to "Clear",
                     breeds_path,
-                    class: "btn btn-outline-secondary" %>
+                    class: "btn btn-outline-secondary mt-2 mt-xl-0" %>
       <% end %>
     </div>
   </div>
@@ -93,10 +113,24 @@
             <% end %>
 
             <% if breed.sub_breeds.any? %>
-              <p class="text-muted">
+              <div class="mb-3">
                 Sub-breeds:
-                <%= breed.sub_breeds.count %>
-              </p>
+
+                <ul class="mb-0">
+                  <% breed.sub_breeds.order(:name).limit(3).each do |sub_breed| %>
+                    <li>
+                      <%= link_to sub_breed.name,
+                                  sub_breed_path(sub_breed) %>
+                    </li>
+                  <% end %>
+                </ul>
+
+                <% if breed.sub_breeds.count > 3 %>
+                  <small class="text-muted">
+                    And <%= breed.sub_breeds.count - 3 %> more
+                  </small>
+                <% end %>
+              </div>
             <% else %>
               <p class="text-muted">
                 No sub-breeds
@@ -115,7 +149,8 @@
   </div>
 
   <div class="pagination-wrapper mt-5">
-    <%= paginate @breeds %>
+    <%= paginate @breeds,
+                 params: request.query_parameters.except(:page) %>
   </div>
 <% else %>
   <div class="alert alert-warning">

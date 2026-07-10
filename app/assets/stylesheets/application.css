@@ -117,3 +117,23 @@ main {
 .list-group-item:hover {
   background-color: #f1f3f5;
 }
+
+.form-check {
+  padding-top: 10px;
+}
+
+.card ul {
+  padding-left: 20px;
+}
+
+.card ul li {
+  margin-bottom: 3px;
+}
+
+.card ul a {
+  text-decoration: none;
+}
+
+.card ul a:hover {
+  text-decoration: underline;
+}
