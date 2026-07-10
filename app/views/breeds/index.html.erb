@@ -1,2 +1,37 @@
-<h1>Breeds#index</h1>
-<p>Find me in app/views/breeds/index.html.erb</p>
+<h1>Dog Breeds</h1>
+
+<p>
+  Browse all dog breeds collected from the Dog CEO API.
+</p>
+
+<p>
+  Total breeds: <%= @breeds.count %>
+</p>
+
+<div class="breed-list">
+  <% @breeds.each do |breed| %>
+    <section class="breed-card">
+      <h2>
+        <%= link_to breed.name, breed_path(breed) %>
+      </h2>
+
+      <p><%= breed.description %></p>
+
+      <% if breed.featured? %>
+        <p>Featured Breed</p>
+      <% end %>
+
+      <% if breed.dog_images.any? %>
+        <%= image_tag breed.dog_images.first.image_url,
+                      alt: breed.name,
+                      class: "breed-image" %>
+      <% else %>
+        <p>No image available.</p>
+      <% end %>
+
+      <p>
+        <%= link_to "View Breed", breed_path(breed) %>
+      </p>
+    </section>
+  <% end %>
+</div>
