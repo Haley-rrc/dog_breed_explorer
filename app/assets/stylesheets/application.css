@@ -101,3 +101,27 @@ figure {
   padding: 10px 16px;
   cursor: pointer;
 }
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group select {
+  min-width: 240px;
+  padding: 10px;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

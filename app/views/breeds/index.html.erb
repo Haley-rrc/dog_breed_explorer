@@ -7,17 +7,36 @@
 
 <%= form_with url: breeds_path, method: :get, local: true do |form| %>
   <div class="search-form">
-    <%= form.label :query, "Search by breed name" %>
+    <div class="form-group">
+      <%= form.label :query, "Search by breed name" %>
 
-    <%= form.text_field :query,
-                        value: params[:query],
-                        placeholder: "Example: Husky" %>
+      <%= form.text_field :query,
+                          value: params[:query],
+                          placeholder: "Example: Husky" %>
+    </div>
 
-    <%= form.submit "Search" %>
+    <div class="form-group">
+      <%= form.label :category, "Filter breeds" %>
 
-    <% if params[:query].present? %>
-      <%= link_to "Clear", breeds_path %>
-    <% end %>
+      <%= form.select :category,
+          options_for_select(
+            [
+              ["All breeds", ""],
+              ["Breeds with sub-breeds", "with_sub_breeds"],
+              ["Breeds without sub-breeds", "without_sub_breeds"],
+              ["Featured breeds", "featured"]
+            ],
+            params[:category]
+          ) %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Search" %>
+
+      <% if params[:query].present? || params[:category].present? %>
+        <%= link_to "Clear", breeds_path %>
+      <% end %>
+    </div>
   </div>
 <% end %>
 
