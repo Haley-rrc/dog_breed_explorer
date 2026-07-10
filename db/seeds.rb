@@ -2,19 +2,19 @@ require "net/http"
 require "json"
 require "faker"
 
-puts "Deleting old data..."
+puts "Deleting old data"
 
 DogImage.destroy_all
 SubBreed.destroy_all
 Breed.destroy_all
 
-puts "Downloading breed data from Dog CEO API..."
+puts "Downloading data from Dog CEO API"
 
 breed_list_url = URI("https://dog.ceo/api/breeds/list/all")
 breed_response = Net::HTTP.get_response(breed_list_url)
 
 unless breed_response.is_a?(Net::HTTPSuccess)
-  puts "Could not download breed data."
+  puts "Could not download data."
   exit
 end
 
