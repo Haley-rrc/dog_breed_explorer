@@ -76,8 +76,15 @@
 <% end %>
 
 <p class="mb-4">
-  Results:
+  <strong>Total results:</strong>
   <%= @breeds.total_count %>
+
+  <% if @breeds.total_pages > 1 %>
+    <span class="text-muted">
+      — Page <%= @breeds.current_page %>
+      of <%= @breeds.total_pages %>
+    </span>
+  <% end %>
 </p>
 
 <% if @breeds.any? %>
