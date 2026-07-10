@@ -1,22 +1,32 @@
-<h1>Dog Breeds</h1>
+<div class="mb-4">
+  <h1 class="display-5 fw-bold">Dog Breeds</h1>
 
-<p>
-  Browse all dog breeds collected from the Dog CEO API.
-</p>
+  <p class="lead">
+    Browse all dog breeds collected from the Dog CEO API.
+  </p>
+</div>
 
+<%= form_with url: breeds_path,
+              method: :get,
+              local: true,
+              class: "search-form mb-4" do |form| %>
 
-<%= form_with url: breeds_path, method: :get, local: true do |form| %>
-  <div class="search-form">
-    <div class="form-group">
-      <%= form.label :query, "Search by breed name" %>
+  <div class="row g-3 align-items-end">
+    <div class="col-12 col-md-5">
+      <%= form.label :query,
+                     "Search by breed name",
+                     class: "form-label fw-bold" %>
 
       <%= form.text_field :query,
                           value: params[:query],
-                          placeholder: "Example: Husky" %>
+                          placeholder: "Example: Husky",
+                          class: "form-control" %>
     </div>
 
-    <div class="form-group">
-      <%= form.label :category, "Filter breeds" %>
+    <div class="col-12 col-md-4">
+      <%= form.label :category,
+                     "Filter breeds",
+                     class: "form-label fw-bold" %>
 
       <%= form.select :category,
           options_for_select(
@@ -27,51 +37,88 @@
               ["Featured breeds", "featured"]
             ],
             params[:category]
-          ) %>
+          ),
+          {},
+          class: "form-select" %>
     </div>
 
-    <div class="form-actions">
-      <%= form.submit "Search" %>
+    <div class="col-12 col-md-3">
+      <%= form.submit "Search",
+                      class: "btn btn-primary me-2" %>
 
       <% if params[:query].present? || params[:category].present? %>
-        <%= link_to "Clear", breeds_path %>
+        <%= link_to "Clear",
+                    breeds_path,
+                    class: "btn btn-outline-secondary" %>
       <% end %>
     </div>
   </div>
 <% end %>
 
+<p class="mb-4">
+  <strong>Results:</strong>
+  <%= @breeds.total_count %>
+</p>
+
 <% if @breeds.any? %>
-  <div class="breed-list">
+  <div class="row g-4">
     <% @breeds.each do |breed| %>
-      <section class="breed-card">
-        <h2>
-          <%= link_to breed.name, breed_path(breed) %>
-        </h2>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <% if breed.dog_images.any? %>
+            <%= image_tag breed.dog_images.first.image_url,
+                          alt: breed.name,
+                          class: "card-img-top breed-card-image" %>
+          <% else %>
+            <div class="no-image-placeholder">
+              No image available
+            </div>
+          <% end %>
 
-        <p><%= breed.description %></p>
+          <div class="card-body d-flex flex-column">
+            <h2 class="card-title h4">
+              <%= breed.name %>
+            </h2>
 
-        <% if breed.featured? %>
-          <p><strong>Featured Breed</strong></p>
-        <% end %>
+            <p class="card-text">
+              <%= breed.description %>
+            </p>
 
-        <% if breed.dog_images.any? %>
-          <%= image_tag breed.dog_images.first.image_url,
-                        alt: breed.name,
-                        class: "breed-image" %>
-        <% else %>
-          <p>No image available.</p>
-        <% end %>
+            <% if breed.featured? %>
+              <p>
+                <span class="badge text-bg-warning">
+                  Featured Breed
+                </span>
+              </p>
+            <% end %>
 
-        <p>
-          <%= link_to "View Breed", breed_path(breed) %>
-        </p>
-      </section>
+            <% if breed.sub_breeds.any? %>
+              <p class="text-muted">
+                Sub-breeds:
+                <%= breed.sub_breeds.count %>
+              </p>
+            <% else %>
+              <p class="text-muted">
+                No sub-breeds
+              </p>
+            <% end %>
+
+            <div class="mt-auto">
+              <%= link_to "View Breed",
+                          breed_path(breed),
+                          class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
-<% else %>
-  <p>No breeds matched.</p>
-<% end %>
 
-<div class="pagination-wrapper">
-  <%= paginate @breeds %>
-</div>
+  <div class="pagination-wrapper mt-5">
+    <%= paginate @breeds %>
+  </div>
+<% else %>
+  <div class="alert alert-warning">
+    No breeds matched your search.
+  </div>
+<% end %>
