@@ -1,37 +1,43 @@
-<h1>Dog Breeds</h1>
+<h1><%= @breed.name %></h1>
 
-<p>
-  Browse all dog breeds collected from the Dog CEO API.
-</p>
+<p><%= @breed.description %></p>
 
-<p>
-  Total breeds: <%= @breeds.count %>
-</p>
+<% if @breed.featured? %>
+  <p>This is a featured breed.</p>
+<% end %>
 
-<div class="breed-list">
-  <% @breeds.each do |breed| %>
-    <section class="breed-card">
-      <h2>
-        <%= link_to breed.name, breed_path(breed) %>
-      </h2>
+<h2>Sub-breeds</h2>
 
-      <p><%= breed.description %></p>
+<% if @breed.sub_breeds.any? %>
+  <ul>
+    <% @breed.sub_breeds.order(:name).each do |sub_breed| %>
+      <li><%= sub_breed.name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>This breed has no sub-breeds.</p>
+<% end %>
 
-      <% if breed.featured? %>
-        <p>Featured Breed</p>
-      <% end %>
+<h2>Dog Images</h2>
 
-      <% if breed.dog_images.any? %>
-        <%= image_tag breed.dog_images.first.image_url,
-                      alt: breed.name,
+<% if @breed.dog_images.any? %>
+  <div class="image-gallery">
+    <% @breed.dog_images.each do |dog_image| %>
+      <figure>
+        <%= image_tag dog_image.image_url,
+                      alt: dog_image.caption,
                       class: "breed-image" %>
-      <% else %>
-        <p>No image available.</p>
-      <% end %>
 
-      <p>
-        <%= link_to "View Breed", breed_path(breed) %>
-      </p>
-    </section>
-  <% end %>
-</div>
+        <figcaption>
+          <%= dog_image.caption %>
+        </figcaption>
+      </figure>
+    <% end %>
+  </div>
+<% else %>
+  <p>No images are available for this breed.</p>
+<% end %>
+
+<p>
+  <%= link_to "Back to All Breeds", breeds_path %>
+</p>
