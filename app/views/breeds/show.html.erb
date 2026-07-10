@@ -1,2 +1,43 @@
-<h1>Breeds#show</h1>
-<p>Find me in app/views/breeds/show.html.erb</p>
+<h1><%= @breed.name %></h1>
+
+<p><%= @breed.description %></p>
+
+<% if @breed.featured? %>
+  <p>This is a featured breed.</p>
+<% end %>
+
+<h2>Sub-breeds</h2>
+
+<% if @breed.sub_breeds.any? %>
+  <ul>
+    <% @breed.sub_breeds.order(:name).each do |sub_breed| %>
+      <li><%= sub_breed.name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>This breed has no sub-breeds.</p>
+<% end %>
+
+<h2>Dog Images</h2>
+
+<% if @breed.dog_images.any? %>
+  <div class="image-gallery">
+    <% @breed.dog_images.each do |dog_image| %>
+      <figure>
+        <%= image_tag dog_image.image_url,
+                      alt: dog_image.caption,
+                      class: "breed-image" %>
+
+        <figcaption>
+          <%= dog_image.caption %>
+        </figcaption>
+      </figure>
+    <% end %>
+  </div>
+<% else %>
+  <p>No images are available for this breed.</p>
+<% end %>
+
+<p>
+  <%= link_to "Back to All Breeds", breeds_path %>
+</p>

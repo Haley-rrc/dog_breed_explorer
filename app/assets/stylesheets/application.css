@@ -76,3 +76,28 @@ figure {
     grid-template-columns: 1fr;
   }
 }
+
+.search-form {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+}
+
+.search-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.search-form input[type="text"] {
+  width: 300px;
+  max-width: 100%;
+  padding: 10px;
+  margin-right: 8px;
+}
+
+.search-form input[type="submit"] {
+  padding: 10px 16px;
+  cursor: pointer;
+}
