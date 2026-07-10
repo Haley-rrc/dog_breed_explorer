@@ -1,0 +1,56 @@
+<div class="mb-4">
+  <%= link_to "← Back to #{@breed.name}",
+              breed_path(@breed),
+              class: "btn btn-outline-secondary mb-3" %>
+
+  <h1 class="display-5 fw-bold">
+    <%= @sub_breed.name %>
+  </h1>
+
+  <p class="lead">
+    This is a sub-breed of
+    <%= link_to @breed.name, breed_path(@breed) %>.
+  </p>
+</div>
+
+<div class="card shadow-sm mb-5">
+  <div class="card-body">
+    <h2 class="h4">Sub-breed Information</h2>
+
+    <p>
+      Sub-breed name:
+      <%= @sub_breed.name %>
+    </p>
+
+    <p>
+      Main breed:
+      <%= link_to @breed.name, breed_path(@breed) %>
+    </p>
+  </div>
+</div>
+
+<section>
+  <h2>Images from the Main Breed</h2>
+
+  <% if @breed.dog_images.any? %>
+    <div class="row g-4">
+      <% @breed.dog_images.each do |dog_image| %>
+        <div class="col-12 col-md-6 col-lg-4">
+          <figure class="card h-100 shadow-sm">
+            <%= image_tag dog_image.image_url,
+                          alt: dog_image.caption,
+                          class: "card-img-top breed-detail-image" %>
+
+            <figcaption class="card-body">
+              <%= dog_image.caption %>
+            </figcaption>
+          </figure>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-warning">
+      No images are available.
+    </div>
+  <% end %>
+</section>
