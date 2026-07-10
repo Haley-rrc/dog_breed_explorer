@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   resources :breeds, only: [:index, :show]
   resources :sub_breeds, only: [:show]
+  resources :dog_images, only: [:show]
 
   get "about", to: "pages#about", as: :about
 end
