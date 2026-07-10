@@ -156,3 +156,17 @@ main {
 .breed-detail-image:hover {
   opacity: 0.85;
 }
+
+.erd-image {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+}
+
+footer {
+  min-height: 110px;
+}
+
+code {
+  word-break: break-word;
+}
